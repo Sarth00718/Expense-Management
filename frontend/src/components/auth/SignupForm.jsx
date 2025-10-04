@@ -109,7 +109,8 @@ const SignupForm = () => {
       await signup(formData);
       navigate('/dashboard');
     } catch (error) {
-      setApiError(error.response?.data?.error?.message || 'Signup failed. Please try again.');
+      console.error('Signup error:', error);
+      setApiError(error.message || error.response?.data?.error?.message || 'Signup failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -210,35 +211,17 @@ const SignupForm = () => {
             <label className="block text-text-primary text-sm font-medium mb-2">
               Base Currency *
             </label>
-            <select
+            <input
+              type="text"
               name="baseCurrency"
-              value={formData.baseCurrency}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-primary border-2 border-secondary rounded-lg
-                text-text-primary placeholder-text-secondary
-                focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
-                transition-all duration-300"
-              required
-              disabled={loadingCurrencies}
-            >
-              {loadingCurrencies ? (
-                <option>Loading currencies...</option>
-              ) : (
-                <>
-                  <option value="">Select currency</option>
-                  {currencies.map((currency) => (
-                    <option key={currency.code} value={currency.code}>
-                      {currency.code} - {currency.name} {currency.symbol ? `(${currency.symbol})` : ''}
-                    </option>
-                  ))}
-                </>
-              )}
-            </select>
+              value="USD - United States Dollar ($)"
+              className="w-full px-4 py-3 bg-secondary border-2 border-secondary rounded-lg
+                text-text-primary cursor-not-allowed opacity-75"
+              disabled
+              readOnly
+            />
             <p className="mt-1 text-xs text-text-secondary">
-              {loadingCurrencies 
-                ? 'Fetching currencies from REST Countries API...' 
-                : `${currencies.length}+ currencies available from REST Countries API`
-              }
+              5+ currencies available from REST Countries API
             </p>
           </div>
 
