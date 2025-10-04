@@ -4,14 +4,54 @@ A comprehensive expense management system with OCR receipt scanning, multi-level
 
 ## Features
 
-- 🔐 JWT-based authentication with role-based access control
-- 📸 OCR receipt scanning with Tesseract.js
-- 💰 Multi-currency support with real-time conversion
-- ✅ Multi-level approval workflows with conditional rules
-- 📊 Interactive analytics dashboard
-- 🔔 Real-time notifications with Socket.io
-- 🎨 Dark-blue futuristic UI theme
-- 📱 Fully responsive design
+### Authentication & Authorization
+- ✅ JWT-based authentication
+- ✅ Role-based access control (Admin, Manager, Employee)
+- ✅ Secure password hashing with bcrypt
+- ✅ Session management with 24-hour token expiry
+
+### Expense Management
+- ✅ Create, edit, and delete expenses
+- ✅ Upload receipt images (JPEG, PNG, WebP)
+- ✅ OCR receipt scanning with Tesseract.js
+- ✅ Multi-currency support with real-time conversion
+- ✅ Expense categories (Travel, Food, Office Supplies, etc.)
+- ✅ Draft and submit workflow
+- ✅ Expense history and filtering
+
+### Approval Workflows
+- ✅ Multi-level approval system
+- ✅ Manager approval for team expenses
+- ✅ Admin override capability
+- ✅ Approval rules configuration
+- ✅ Approval history tracking
+- ✅ Comments on approvals/rejections
+
+### Analytics & Reporting
+- ✅ Interactive dashboard with Chart.js
+- ✅ Expense breakdown by category
+- ✅ Monthly expense trends
+- ✅ Role-based analytics (personal, team, company-wide)
+- ✅ Export reports (PDF and Excel)
+- ✅ Real-time statistics
+
+### User Management
+- ✅ Create and manage users (Admin only)
+- ✅ Assign managers to employees
+- ✅ Update user roles
+- ✅ User activation/deactivation
+
+### Real-time Features
+- ✅ Real-time notifications with Socket.io
+- ✅ Live expense status updates
+- ✅ Instant approval notifications
+
+### UI/UX
+- ✅ Dark-blue futuristic theme
+- ✅ Fully responsive design (mobile, tablet, desktop)
+- ✅ Tailwind CSS styling
+- ✅ Intuitive navigation
+- ✅ Loading states and error handling
 
 ## Tech Stack
 
@@ -34,25 +74,37 @@ A comprehensive expense management system with OCR receipt scanning, multi-level
 
 ```
 exesman/
-├── frontend/           # React frontend application
+├── frontend/                    # React frontend application
 │   ├── src/
-│   │   ├── components/ # React components
-│   │   ├── pages/      # Page components
-│   │   ├── services/   # API services
-│   │   ├── context/    # React context
-│   │   ├── hooks/      # Custom hooks
-│   │   └── utils/      # Utility functions
+│   │   ├── components/         # React components
+│   │   ├── pages/              # Page components
+│   │   ├── services/           # API services
+│   │   ├── context/            # React context
+│   │   ├── hooks/              # Custom hooks
+│   │   └── utils/              # Utility functions
+│   ├── index.html              # HTML entry point
+│   ├── vite.config.js          # Vite configuration
+│   ├── tailwind.config.js      # Tailwind CSS config
 │   └── package.json
-├── backend/            # Express backend API
-│   ├── config/         # Configuration files
-│   ├── models/         # Mongoose models
-│   ├── controllers/    # Route controllers
-│   ├── middleware/     # Custom middleware
-│   ├── routes/         # API routes
-│   ├── services/       # Business logic
-│   ├── utils/          # Utility functions
+├── backend/                     # Express backend API
+│   ├── config/                 # Configuration files
+│   │   ├── config.js           # Environment config
+│   │   └── database.js         # MongoDB connection
+│   ├── models/                 # Mongoose models
+│   ├── controllers/            # Route controllers
+│   ├── middleware/             # Custom middleware
+│   ├── routes/                 # API routes
+│   ├── services/               # Business logic
+│   │   └── notificationService.js  # Socket.io notifications
+│   ├── utils/                  # Utility functions
+│   ├── uploads/                # Receipt file storage
+│   ├── server.js               # Express server entry
+│   ├── .env.example            # Environment variables template
 │   └── package.json
-└── README.md
+├── API_DOCUMENTATION.md         # Complete API reference
+├── WORKFLOWS.md                 # Visual workflow diagrams
+├── ADMIN_VS_USER_GUIDE.md      # Role comparison guide
+└── README.md                    # This file
 ```
 
 ## 📚 Documentation
@@ -61,13 +113,11 @@ This project includes comprehensive documentation:
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| **[HOW_TO_USE.md](HOW_TO_USE.md)** | Quick overview and navigation | All users |
-| **[QUICK_START.md](QUICK_START.md)** | Fast setup and testing guide | New users |
-| **[USER_GUIDE.md](USER_GUIDE.md)** | Complete user manual with API reference | All users |
-| **[WORKFLOWS.md](WORKFLOWS.md)** | Visual workflow diagrams | Managers & Admins |
-| **[.setup-complete.md](.setup-complete.md)** | Technical setup details | Developers |
+| **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** | Complete API reference with endpoints | Developers |
+| **[WORKFLOWS.md](WORKFLOWS.md)** | Visual workflow diagrams and processes | Managers & Admins |
+| **[ADMIN_VS_USER_GUIDE.md](ADMIN_VS_USER_GUIDE.md)** | Role comparison and capabilities | All users |
 
-**👉 First time here? Start with [QUICK_START.md](QUICK_START.md)**
+**👉 First time here? Follow the Quick Installation guide below**
 
 ## Getting Started
 
@@ -77,7 +127,7 @@ This project includes comprehensive documentation:
 - MongoDB (v6 or higher)
 - npm or yarn
 
-### Quick Installation (3 Steps)
+### Quick Installation (4 Steps)
 
 **Step 1: Start MongoDB**
 ```bash
@@ -90,18 +140,16 @@ cd backend
 npm run dev
 ```
 
-**Step 3: Start Frontend**
+**Step 3: Start Frontend** (in a new terminal)
 ```bash
 cd frontend
 npm run dev
 ```
 
 **Step 4: Open Browser**
-Navigate to: http://localhost:3000
+Navigate to: http://localhost:5173
 
 **✅ Done! Create your admin account and start using the system.**
-
-For detailed setup instructions, see **[QUICK_START.md](QUICK_START.md)**
 
 ### Full Installation (First Time)
 
@@ -133,13 +181,42 @@ cp .env.example .env
 5. Follow Quick Installation steps above
 
 The application will be available at:
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:5173 (Vite dev server)
 - Backend API: http://localhost:5000
 - Health Check: http://localhost:5000/api/health
 
 ## Environment Variables
 
-See `backend/.env.example` for required environment variables.
+Create a `.env` file in the `backend` directory with the following variables:
+
+```bash
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/exesman
+
+# JWT Authentication
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRES_IN=24h
+
+# Client URL for CORS (update to match Vite dev server)
+CLIENT_URL=http://localhost:5173
+
+# File Upload
+UPLOAD_DIR=uploads/receipts
+MAX_FILE_SIZE=5242880
+
+# External APIs
+EXCHANGE_RATE_API_URL=https://api.exchangerate-api.com/v4/latest
+REST_COUNTRIES_API_URL=https://restcountries.com/v3.1/all
+```
+
+**Important:** Copy `backend/.env.example` to `backend/.env` and update the values, especially:
+- `JWT_SECRET` - Use a strong random string in production
+- `CLIENT_URL` - Set to `http://localhost:5173` for Vite dev server
+- `MONGODB_URI` - Update if using a remote MongoDB instance
 
 ## User Roles
 
@@ -149,7 +226,7 @@ See `backend/.env.example` for required environment variables.
 | **Manager** | Approve/reject team expenses, view team analytics, export reports, all employee features | Department head, Team lead |
 | **Employee** | Submit expenses, upload receipts, track status, view personal history | All staff members |
 
-**For detailed role instructions, see [USER_GUIDE.md](USER_GUIDE.md)**
+**For detailed role comparison, see [ADMIN_VS_USER_GUIDE.md](ADMIN_VS_USER_GUIDE.md)**
 
 ## 🎯 Quick Use Cases
 
@@ -176,7 +253,7 @@ See `backend/.env.example` for required environment variables.
 
 ## API Documentation
 
-**For complete API reference, see [USER_GUIDE.md - API Reference Section](USER_GUIDE.md#api-reference)**
+**For complete API reference, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md)**
 
 ### Authentication Endpoints
 
@@ -347,9 +424,7 @@ Convert amount between currencies.
 cd backend
 npm test
 
-# Frontend tests
-cd frontend
-npm test
+# Note: Frontend tests not yet implemented
 ```
 
 ### Code Style
@@ -375,23 +450,56 @@ npm run build
 ### Common Issues
 
 **MongoDB Connection Error**
-- Ensure MongoDB is running
-- Check connection string in `.env`
-- Verify network connectivity
+```
+Error: connect ECONNREFUSED 127.0.0.1:27017
+```
+- Ensure MongoDB is running: `mongod` or start MongoDB service
+- Check connection string in `backend/.env`
+- Verify MongoDB is installed: `mongod --version`
+- On Windows, start MongoDB service from Services app
 
 **Port Already in Use**
-- Change port in `.env` file
-- Kill process using the port: `lsof -ti:5000 | xargs kill`
+```
+Error: listen EADDRINUSE: address already in use :::5000
+```
+- Change port in `backend/.env` file
+- On Windows: `netstat -ano | findstr :5000` then `taskkill /PID <PID> /F`
+- On Mac/Linux: `lsof -ti:5000 | xargs kill`
+
+**CORS Error in Browser**
+```
+Access to XMLHttpRequest blocked by CORS policy
+```
+- Verify `CLIENT_URL` in `backend/.env` matches your frontend URL
+- For Vite dev server, use `http://localhost:5173`
+- Restart backend server after changing `.env`
 
 **OCR Not Working**
 - Ensure receipt images are clear and well-lit
 - Supported formats: JPEG, PNG, WebP
-- Maximum file size: 5MB
+- Maximum file size: 5MB (configurable in `.env`)
+- Check browser console for errors
+- Tesseract.js downloads language data on first use
 
 **Currency Conversion Fails**
 - Check internet connectivity
 - Verify Exchange Rate API is accessible
 - System falls back to manual entry if API fails
+- Check browser console for API errors
+
+**Frontend Not Loading**
+```
+Failed to resolve module specifier
+```
+- Run `npm install` in frontend directory
+- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
+- Check Node.js version: `node --version` (requires v18+)
+
+**Backend Crashes on Startup**
+- Check all environment variables are set in `.env`
+- Verify MongoDB is running and accessible
+- Check for syntax errors in recent code changes
+- Review server logs for specific error messages
 
 ## Performance Optimization
 
@@ -425,9 +533,9 @@ The application includes several performance optimizations:
 ## 📖 Documentation Guide
 
 ### New to Exe$Man?
-1. Start with **[HOW_TO_USE.md](HOW_TO_USE.md)** for an overview
-2. Follow **[QUICK_START.md](QUICK_START.md)** to set up and test
-3. Reference **[USER_GUIDE.md](USER_GUIDE.md)** for detailed instructions
+1. Follow the **Quick Installation** guide above to set up
+2. Create your admin account on first launch
+3. Reference **[ADMIN_VS_USER_GUIDE.md](ADMIN_VS_USER_GUIDE.md)** for role-specific instructions
 
 ### Need to Understand Workflows?
 - See **[WORKFLOWS.md](WORKFLOWS.md)** for visual diagrams
@@ -435,22 +543,23 @@ The application includes several performance optimizations:
 - Learn approval processes
 - View system integration maps
 
-### Technical Setup?
-- Check **[.setup-complete.md](.setup-complete.md)** for configuration
-- Review project structure
-- Understand dependencies
-- Configure environment variables
+### Building with the API?
+- Check **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** for complete endpoint reference
+- Review authentication requirements
+- Understand request/response formats
+- See example API calls
 
 ## 🧪 Testing the System
 
 ### Quick Test (5 minutes)
 
 1. **Create Admin Account**
-   - Open http://localhost:3000
+   - Open http://localhost:5173
    - Sign up with your details
    - You're now admin!
 
 2. **Add Test Users**
+   - Navigate to Users section
    - Create a manager account
    - Create an employee account
    - Assign manager to employee
@@ -462,44 +571,75 @@ The application includes several performance optimizations:
    - Approve the expense
    - Success! ✅
 
-**For detailed test scenarios, see [QUICK_START.md](QUICK_START.md)**
+**For detailed role capabilities, see [ADMIN_VS_USER_GUIDE.md](ADMIN_VS_USER_GUIDE.md)**
 
 ## 🎓 Learning Resources
 
-### Video Tutorials (Coming Soon)
-- System overview
-- Employee walkthrough
-- Manager approval process
-- Admin configuration
+### Documentation
+- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete API reference
+- **[WORKFLOWS.md](WORKFLOWS.md)** - Visual workflow diagrams
+- **[ADMIN_VS_USER_GUIDE.md](ADMIN_VS_USER_GUIDE.md)** - Role comparison guide
 
-### Sample Data
-See [QUICK_START.md](QUICK_START.md) for sample expenses to create during testing.
-
-### Common Questions
-See [USER_GUIDE.md - Troubleshooting](USER_GUIDE.md#troubleshooting) for answers to common questions.
+### Sample Test Data
+Create test expenses with these categories:
+- Travel: Transportation, flights, hotels
+- Food: Client meals, team lunches
+- Office Supplies: Equipment, stationery
+- Entertainment: Client entertainment
+- Utilities: Internet, phone bills
+- Other: Miscellaneous expenses
 
 ## 🚀 Production Deployment
 
 ### Pre-Deployment Checklist
-- [ ] Update JWT secret in production `.env`
-- [ ] Configure production MongoDB URI
+- [ ] Update JWT secret in production `.env` (use strong random string)
+- [ ] Configure production MongoDB URI (MongoDB Atlas recommended)
 - [ ] Set up HTTPS/SSL certificates
-- [ ] Configure CORS for production domain
-- [ ] Enable rate limiting
-- [ ] Set up backup strategy
-- [ ] Configure email notifications
-- [ ] Test all features in staging
-- [ ] Train users on the system
-- [ ] Prepare support documentation
+- [ ] Update `CLIENT_URL` in backend `.env` to production domain
+- [ ] Build frontend: `cd frontend && npm run build`
+- [ ] Set `NODE_ENV=production` in backend `.env`
+- [ ] Configure file upload storage (consider cloud storage)
+- [ ] Set up backup strategy for MongoDB
+- [ ] Test all features in staging environment
+- [ ] Configure monitoring and logging
+- [ ] Set up error tracking (e.g., Sentry)
 
 ### Environment Variables for Production
 ```bash
 NODE_ENV=production
 PORT=5000
-MONGODB_URI=mongodb://your-production-db
-JWT_SECRET=your-secure-secret-key
-FRONTEND_URL=https://your-domain.com
-EXCHANGE_RATE_API_KEY=your-api-key
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/exesman
+JWT_SECRET=use-a-very-strong-random-secret-key-here
+JWT_EXPIRES_IN=24h
+CLIENT_URL=https://your-domain.com
+UPLOAD_DIR=uploads/receipts
+MAX_FILE_SIZE=5242880
+EXCHANGE_RATE_API_URL=https://api.exchangerate-api.com/v4/latest
+REST_COUNTRIES_API_URL=https://restcountries.com/v3.1/all
+```
+
+### Deployment Options
+
+**Option 1: Traditional VPS (DigitalOcean, Linode, AWS EC2)**
+1. Set up Node.js and MongoDB on server
+2. Clone repository
+3. Install dependencies
+4. Configure environment variables
+5. Build frontend
+6. Use PM2 to run backend: `pm2 start backend/server.js`
+7. Configure Nginx as reverse proxy
+8. Set up SSL with Let's Encrypt
+
+**Option 2: Platform as a Service**
+- **Backend**: Deploy to Heroku, Railway, or Render
+- **Frontend**: Deploy to Vercel, Netlify, or Cloudflare Pages
+- **Database**: Use MongoDB Atlas (free tier available)
+
+**Option 3: Docker**
+```bash
+# Create Dockerfile for backend and frontend
+# Use docker-compose for orchestration
+docker-compose up -d
 ```
 
 ## 📊 System Requirements
@@ -548,10 +688,11 @@ We welcome contributions! Please follow these steps:
 
 ## 📞 Support
 
-### Self-Help
-1. Check **[USER_GUIDE.md](USER_GUIDE.md)** for detailed instructions
-2. Review **[QUICK_START.md](QUICK_START.md)** for setup issues
+### Self-Help Resources
+1. Check **[ADMIN_VS_USER_GUIDE.md](ADMIN_VS_USER_GUIDE.md)** for role-specific instructions
+2. Review **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** for API issues
 3. See **[WORKFLOWS.md](WORKFLOWS.md)** for process questions
+4. Check the Troubleshooting section below
 
 ### Report Issues
 For bugs and feature requests, please open an issue on the repository with:
@@ -559,7 +700,7 @@ For bugs and feature requests, please open an issue on the repository with:
 - Steps to reproduce
 - Expected vs actual behavior
 - Screenshots (if applicable)
-- System information (OS, Node version, etc.)
+- System information (OS, Node version, MongoDB version)
 
 ### Community
 - GitHub Issues: Bug reports and feature requests
@@ -597,18 +738,29 @@ For bugs and feature requests, please open an issue on the repository with:
 ### v1.0.0 (October 2024)
 - Initial release
 - Core expense management features
-- OCR receipt scanning
-- Multi-currency support
-- Approval workflows
-- Analytics and reporting
-- Comprehensive documentation
+  - Create, submit, and track expenses
+  - Multi-level approval workflows
+  - Role-based access control (Admin, Manager, Employee)
+- OCR receipt scanning with Tesseract.js
+- Multi-currency support with real-time conversion
+- Real-time notifications via Socket.io
+- Interactive analytics dashboard with Chart.js
+- Export reports (PDF and Excel)
+- Dark-blue futuristic UI with Tailwind CSS
+- Comprehensive API documentation
+- Visual workflow diagrams
+- Role comparison guide
 
 ## 🙏 Acknowledgments
 
-- Tesseract.js for OCR capabilities
-- Exchange Rate API for currency conversion
-- MongoDB for database
-- React and Express communities
+- **Tesseract.js** - OCR capabilities for receipt scanning
+- **Exchange Rate API** - Real-time currency conversion
+- **MongoDB** - Flexible document database
+- **Socket.io** - Real-time bidirectional communication
+- **Chart.js** - Beautiful interactive charts
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vite** - Fast frontend build tool
+- **React** and **Express** communities for excellent documentation
 
 ## 📄 License
 
@@ -618,10 +770,68 @@ ISC
 
 ## 🎉 Quick Links
 
-- **[Get Started Now](QUICK_START.md)** - 5-minute setup
-- **[Complete User Guide](USER_GUIDE.md)** - Full documentation
+- **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
 - **[Visual Workflows](WORKFLOWS.md)** - Process diagrams
-- **[How to Use](HOW_TO_USE.md)** - Overview guide
+- **[Role Comparison](ADMIN_VS_USER_GUIDE.md)** - Admin vs User guide
+
+---
+
+## 📋 Quick Reference
+
+### Development Commands
+
+```bash
+# Backend
+cd backend
+npm install          # Install dependencies
+npm run dev          # Start dev server with hot reload
+npm start            # Start production server
+npm test             # Run tests
+
+# Frontend
+cd frontend
+npm install          # Install dependencies
+npm run dev          # Start Vite dev server (http://localhost:5173)
+npm run build        # Build for production
+npm run preview      # Preview production build
+
+# MongoDB
+mongod               # Start MongoDB server
+mongo                # Open MongoDB shell
+```
+
+### Default Ports
+- Frontend (Vite): `http://localhost:5173`
+- Backend API: `http://localhost:5000`
+- MongoDB: `mongodb://localhost:27017`
+
+### First-Time Setup
+```bash
+# 1. Clone and install
+git clone <repository-url>
+cd exesman
+cd backend && npm install
+cd ../frontend && npm install
+
+# 2. Configure backend
+cd backend
+cp .env.example .env
+# Edit .env and set CLIENT_URL=http://localhost:5173
+
+# 3. Start MongoDB
+mongod
+
+# 4. Start backend (new terminal)
+cd backend
+npm run dev
+
+# 5. Start frontend (new terminal)
+cd frontend
+npm run dev
+
+# 6. Open browser
+# Navigate to http://localhost:5173
+```
 
 ---
 
