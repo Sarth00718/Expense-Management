@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight } from 'lucide-react';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import Card from '../common/Card';
 
 const CURRENCIES = [
   { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
@@ -95,123 +94,172 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-accent mb-2">Exe$Man</h1>
-          <p className="text-text-secondary">Create your company account</p>
+    <div className="min-h-screen bg-primary relative overflow-hidden flex items-center justify-center p-4 py-12">
+      {/* Background Gradients */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] bg-accent-secondary/20 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div className="absolute -bottom-[20%] -right-[10%] w-[500px] h-[500px] bg-accent/20 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-success/10 rounded-full blur-[80px] animate-pulse-slow" style={{ animationDelay: '0.5s' }}></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-lg">
+        {/* Logo Section */}
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-accent to-accent-secondary rounded-2xl mb-4 shadow-glow animate-float">
+            <div className="text-4xl font-bold text-white">₹</div>
+          </div>
+          <h1 className="text-4xl font-bold mb-2">
+            <span className="gradient-text">Expense</span>
+            <span className="text-white"> Manager</span>
+          </h1>
+          <p className="text-text-secondary text-lg">Create your company account</p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          {apiError && (
-            <div className="mb-4 p-3 bg-error/20 border border-error rounded-lg text-error text-sm">
-              {apiError}
+        {/* Signup Card */}
+        <div className="glass-effect rounded-3xl p-8 shadow-2xl animate-scale-in">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {apiError && (
+              <div className="p-4 bg-error/10 border border-error/30 rounded-xl text-error text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="text-lg">⚠️</span>
+                  <p>{apiError}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Personal Info */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-5 h-5" />
+                <Input
+                  label="First Name"
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  error={errors.firstName}
+                  placeholder="John"
+                  required
+                  className="pl-12"
+                />
+              </div>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-5 h-5" />
+                <Input
+                  label="Last Name"
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  error={errors.lastName}
+                  placeholder="Doe"
+                  required
+                  className="pl-12"
+                />
+              </div>
             </div>
-          )}
 
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            error={errors.email}
-            placeholder="you@company.com"
-            required
-          />
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-5 h-5" />
+              <Input
+                label="Email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                error={errors.email}
+                placeholder="you@company.com"
+                required
+                className="pl-12"
+              />
+            </div>
 
-          <Input
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            error={errors.password}
-            placeholder="••••••••"
-            required
-            rightIcon={showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            onRightIconClick={() => setShowPassword(!showPassword)}
-          />
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-5 h-5" />
+              <Input
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                error={errors.password}
+                placeholder="••••••••"
+                required
+                rightIcon={showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                onRightIconClick={() => setShowPassword(!showPassword)}
+                className="pl-12"
+              />
+            </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="First Name"
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              error={errors.firstName}
-              placeholder="John"
-              required
-            />
+            <div className="relative">
+              <Building className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-5 h-5" />
+              <Input
+                label="Company Name"
+                type="text"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                error={errors.companyName}
+                placeholder="Acme Inc."
+                required
+                className="pl-12"
+              />
+            </div>
 
-            <Input
-              label="Last Name"
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              error={errors.lastName}
-              placeholder="Doe"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-text-primary text-sm font-medium mb-2">
+                Base Currency
+              </label>
+              <select
+                name="baseCurrency"
+                value={formData.baseCurrency}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-secondary border-2 border-secondary rounded-xl
+                  text-text-primary focus:outline-none focus:border-accent focus:shadow-glow transition-all duration-300"
+              >
+                {CURRENCIES.map(currency => (
+                  <option key={currency.code} value={currency.code}>
+                    {currency.code} - {currency.name} ({currency.symbol})
+                  </option>
+                ))}
+              </select>
+              <p className="mt-2 text-xs text-text-secondary">
+                Default currency for your company
+              </p>
+            </div>
 
-          <Input
-            label="Company Name"
-            type="text"
-            name="companyName"
-            value={formData.companyName}
-            onChange={handleChange}
-            error={errors.companyName}
-            placeholder="Acme Inc."
-            required
-          />
-
-          <div className="mb-4">
-            <label className="block text-text-primary text-sm font-medium mb-2">
-              Base Currency
-            </label>
-            <select
-              name="baseCurrency"
-              value={formData.baseCurrency}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-secondary border-2 border-secondary rounded-lg
-                text-text-primary focus:outline-none focus:border-accent focus:shadow-glow transition-all duration-300"
+            <Button
+              type="submit"
+              disabled={loading}
+              fullWidth
+              className="mt-6 py-4 text-lg font-semibold rounded-xl hover-glow group"
             >
-              {CURRENCIES.map(currency => (
-                <option key={currency.code} value={currency.code}>
-                  {currency.code} - {currency.name} ({currency.symbol})
-                </option>
-              ))}
-            </select>
-            <p className="mt-1 text-xs text-text-secondary">
-              Default currency for your company
-            </p>
-          </div>
+              <div className="flex items-center justify-center gap-2">
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    Create Account
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </div>
+            </Button>
+          </form>
+        </div>
 
-          <Button
-            type="submit"
-            disabled={loading}
-            fullWidth
-            className="mt-6"
-          >
-            {loading ? 'Creating Account...' : 'Sign Up'}
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <p className="text-text-secondary">
             Already have an account?{' '}
             <button
               onClick={() => navigate('/login')}
-              className="text-accent hover:text-accent-secondary transition-colors"
+              className="text-accent hover:text-accent-secondary font-semibold transition-colors"
             >
               Log in
             </button>
           </p>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

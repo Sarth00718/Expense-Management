@@ -12,7 +12,8 @@ const Input = ({
   disabled = false,
   icon = null,
   rightIcon = null,
-  onRightIconClick = null
+  onRightIconClick = null,
+  className = ''
 }) => {
   return (
     <div className="mb-4">
@@ -39,7 +40,8 @@ const Input = ({
           className={`w-full ${icon ? 'pl-10' : 'pl-4'} ${rightIcon ? 'pr-10' : 'pr-4'} py-3 bg-secondary border-2 rounded-lg text-text-primary placeholder-text-secondary/50 
             focus:outline-none focus:border-accent focus:shadow-glow transition-all duration-300
             ${error ? 'border-error focus:border-error focus:shadow-glow-error' : 'border-secondary/50'}
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            ${className}`}
         />
         {rightIcon && (
           <button
