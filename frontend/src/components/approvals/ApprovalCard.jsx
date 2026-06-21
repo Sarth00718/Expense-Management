@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../common/Button';
+import { formatCurrency } from '../../utils/currency';
 
 // Category icons
 const CATEGORY_ICONS = {
@@ -18,13 +19,6 @@ const ApprovalCard = ({ expense, onApprove, onReject, onViewDetails }) => {
       month: 'short',
       day: 'numeric'
     });
-  };
-
-  const formatCurrency = (amount, currency) => {
-    if (currency === 'INR') {
-      return `₹${amount.toLocaleString('en-IN')}`;
-    }
-    return `${currency} ${amount.toFixed(2)}`;
   };
 
   const categoryIcon = CATEGORY_ICONS[expense.category] || CATEGORY_ICONS.other;

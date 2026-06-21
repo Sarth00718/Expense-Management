@@ -1,7 +1,8 @@
 import React from 'react';
 import Card from '../common/Card';
+import { formatCurrency } from '../../utils/currency';
 
-const UnusualSpendingAlerts = ({ data }) => {
+const UnusualSpendingAlerts = ({ data, currency = 'INR' }) => {
   // Detect unusual spending patterns
   const detectAnomalies = (categoryData) => {
     if (!categoryData || categoryData.length === 0) return [];
@@ -53,7 +54,7 @@ const UnusualSpendingAlerts = ({ data }) => {
                   </p>
                   <p className="text-text-secondary text-sm mt-1">{alert.message}</p>
                   <p className="text-warning text-sm font-semibold mt-1">
-                    ${alert.amount.toFixed(2)}
+                    {formatCurrency(alert.amount, currency)}
                   </p>
                 </div>
               </div>

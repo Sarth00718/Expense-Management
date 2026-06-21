@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '../../utils/currency';
 
 // Category icons
 const CATEGORY_ICONS = {
@@ -44,13 +45,6 @@ const ExpenseCard = ({ expense, onEdit, onDelete, onView }) => {
       month: 'short',
       day: 'numeric'
     });
-  };
-
-  const formatCurrency = (amount, currency) => {
-    if (currency === 'INR') {
-      return `₹${amount.toLocaleString('en-IN')}`;
-    }
-    return `${currency} ${amount.toFixed(2)}`;
   };
 
   const canEdit = expense.status === 'draft';

@@ -10,6 +10,7 @@ import ExportModal from './ExportModal';
 import Card from '../common/Card';
 import Loader from '../common/Loader';
 import Button from '../common/Button';
+import { formatCurrency } from '../../utils/currency';
 import {
   getDashboardStats,
   getExpensesByCategory,
@@ -85,6 +86,7 @@ const Dashboard = () => {
 
   const summary = dashboardData?.summary || {};
   const topSpenders = dashboardData?.topSpenders || [];
+  const baseCurrency = user?.companyId?.baseCurrency || 'INR';
 
   return (
     <div className="space-y-6">
@@ -118,7 +120,7 @@ const Dashboard = () => {
         />
         <TrendWidget
           title="Total Amount"
-          value={`₹${(summary.totalAmount || 0).toLocaleString('en-IN')}`}
+          value={formatCurrency(summary.totalAmount || 0, baseCurrency)}
           icon="💰"
         />
         <TrendWidget
@@ -136,22 +138,22 @@ const Dashboard = () => {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="h-80 md:h-96">
-          <ExpenseChart data={monthlyData} title="Expense Trends" />
+          <ExpenseChart data={monthlyData} title="Expense Trends" currency={baseCurrency} />
         </Card>
         <Card className="h-80 md:h-96">
-          <CategoryBreakdown data={categoryData} />
+          <CategoryBreakdown data={categoryData} currency={baseCurrency} />
         </Card>
       </div>
 
       {/* Approval Stats and Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="h-80 md:h-96">
-          {approvalData && <ApprovalStats data={approvalData} />}
+          {approvalData && <ApprovalStats data={approvalData} currency={baseCurrency} />}
         </Card>
         <div className="space-y-6">
-          <UnusualSpendingAlerts data={categoryData} />
+          <UnusualSpendingAlerts data={categoryData} currency={baseCurrency} />
           {(user?.role === 'manager' || user?.role === 'admin') && topSpenders.length > 0 && (
-            <TopSpenders data={topSpenders} />
+            <TopSpenders data={topSpenders} currency={baseCurrency} />
           )}
         </div>
       </div>

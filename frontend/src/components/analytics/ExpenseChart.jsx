@@ -11,6 +11,7 @@ import {
   Legend,
   Filler
 } from 'chart.js';
+import { formatCurrency } from '../../utils/currency';
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +24,7 @@ ChartJS.register(
   Filler
 );
 
-const ExpenseChart = ({ data, title = 'Monthly Expenses' }) => {
+const ExpenseChart = ({ data, title = 'Monthly Expenses', currency = 'INR' }) => {
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
   const labels = data.map(item => `${monthNames[item.month - 1]} ${item.year}`);
@@ -68,7 +69,7 @@ const ExpenseChart = ({ data, title = 'Monthly Expenses' }) => {
         displayColors: false,
         callbacks: {
           label: function(context) {
-            return `₹${context.parsed.y.toLocaleString('en-IN')}`;
+            return formatCurrency(context.parsed.y, currency);
           }
         }
       }
@@ -86,7 +87,10 @@ const ExpenseChart = ({ data, title = 'Monthly Expenses' }) => {
             size: window.innerWidth < 768 ? 10 : 12
           },
           callback: function(value) {
-            return '₹' + value.toLocaleString('en-IN');
+            // Simple format for ticks
+            return currency === 'INR' 
+              ? '₹' + value.toLocaleString('en-IN') 
+              : '$' + value.toLocaleString('en-US');
           }
         }
       },

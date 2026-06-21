@@ -8,7 +8,7 @@ const companySchema = new mongoose.Schema({
   },
   baseCurrency: {
     type: String,
-    default: 'USD',
+    default: 'INR',
     uppercase: true
   },
   settings: {

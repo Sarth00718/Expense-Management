@@ -6,6 +6,11 @@ import Input from '../common/Input';
 import Button from '../common/Button';
 import Card from '../common/Card';
 
+const CURRENCIES = [
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+  { code: 'USD', name: 'United States Dollar', symbol: '$' }
+];
+
 const SignupForm = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
@@ -15,7 +20,7 @@ const SignupForm = () => {
     firstName: '',
     lastName: '',
     companyName: '',
-    baseCurrency: 'USD'
+    baseCurrency: 'INR'
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -167,15 +172,19 @@ const SignupForm = () => {
             <label className="block text-text-primary text-sm font-medium mb-2">
               Base Currency
             </label>
-            <input
-              type="text"
+            <select
               name="baseCurrency"
-              value="USD - United States Dollar ($)"
+              value={formData.baseCurrency}
+              onChange={handleChange}
               className="w-full px-4 py-3 bg-secondary border-2 border-secondary rounded-lg
-                text-text-primary cursor-not-allowed opacity-75"
-              disabled
-              readOnly
-            />
+                text-text-primary focus:outline-none focus:border-accent focus:shadow-glow transition-all duration-300"
+            >
+              {CURRENCIES.map(currency => (
+                <option key={currency.code} value={currency.code}>
+                  {currency.code} - {currency.name} ({currency.symbol})
+                </option>
+              ))}
+            </select>
             <p className="mt-1 text-xs text-text-secondary">
               Default currency for your company
             </p>

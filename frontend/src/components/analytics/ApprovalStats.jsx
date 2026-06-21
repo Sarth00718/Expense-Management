@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { formatCurrency } from '../../utils/currency';
 
 ChartJS.register(
   CategoryScale,
@@ -19,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-const ApprovalStats = ({ data }) => {
+const ApprovalStats = ({ data, currency = 'INR' }) => {
   const statusColors = {
     draft: '#B0BEC5',
     pending: '#FFB800',
@@ -72,7 +73,7 @@ const ApprovalStats = ({ data }) => {
             const item = data.statusBreakdown[context.dataIndex];
             return [
               `Count: ${item.count}`,
-              `Amount: $${item.totalAmount.toFixed(2)}`
+              `Amount: ${formatCurrency(item.totalAmount, currency)}`
             ];
           }
         }

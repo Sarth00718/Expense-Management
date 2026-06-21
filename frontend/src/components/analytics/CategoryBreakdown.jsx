@@ -1,14 +1,17 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { formatCurrency } from '../../utils/currency';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const CategoryBreakdown = ({ data }) => {
+const CategoryBreakdown = ({ data, currency = 'INR' }) => {
   const categoryColors = {
     travel: '#00D9FF',
     food: '#7B61FF',
     office_supplies: '#00FF88',
+    entertainment: '#FF6B8A',
+    utilities: '#FFD93D',
     other: '#FFB800'
   };
 
@@ -16,6 +19,8 @@ const CategoryBreakdown = ({ data }) => {
     travel: 'Travel',
     food: 'Food',
     office_supplies: 'Office Supplies',
+    entertainment: 'Entertainment',
+    utilities: 'Utilities',
     other: 'Other'
   };
 
@@ -60,14 +65,14 @@ const CategoryBreakdown = ({ data }) => {
         borderWidth: 1,
         padding: 12,
         callbacks: {
-          label: function(context) {
-            const label = context.label || '';
-            const value = context.parsed || 0;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: ₹${value.toLocaleString('en-IN')} (${percentage}%)`;
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.parsed !== undefined ? context.parsed : 0;
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+              return `${label}: ${formatCurrency(value, currency)} (${percentage}%)`;
+            }
           }
-        }
       }
     }
   };

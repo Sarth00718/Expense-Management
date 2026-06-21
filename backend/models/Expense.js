@@ -20,7 +20,7 @@ const expenseSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Currency is required'],
     uppercase: true,
-    default: 'USD'
+    default: 'INR'
   },
   convertedAmount: {
     type: Number,

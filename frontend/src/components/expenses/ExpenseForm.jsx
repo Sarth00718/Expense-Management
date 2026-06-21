@@ -5,6 +5,7 @@ import ReceiptUpload from './ReceiptUpload';
 import { useCurrency } from '../../hooks/useCurrency';
 import { createExpense, updateExpense } from '../../services/expenseService';
 import { convertCurrency } from '../../services/currencyService';
+import { formatCurrency } from '../../utils/currency';
 
 // Category options with icons
 const CATEGORIES = [
@@ -268,7 +269,7 @@ const ExpenseForm = ({ expense = null, onSuccess, onCancel }) => {
               {converting ? (
                 <span className="text-sm">Converting...</span>
               ) : (
-                `${baseCurrency} ${convertedAmount.toFixed(2)}`
+                formatCurrency(convertedAmount, baseCurrency)
               )}
             </span>
           </div>

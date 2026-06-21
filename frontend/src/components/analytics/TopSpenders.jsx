@@ -1,7 +1,8 @@
 import React from 'react';
 import Card from '../common/Card';
+import { formatCurrency } from '../../utils/currency';
 
-const TopSpenders = ({ data }) => {
+const TopSpenders = ({ data, currency = 'INR' }) => {
   return (
     <Card>
       <h3 className="text-lg font-semibold text-white mb-4">Top Spenders</h3>
@@ -22,7 +23,7 @@ const TopSpenders = ({ data }) => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-accent font-bold">${spender.totalAmount.toFixed(2)}</p>
+                <p className="text-accent font-bold">{formatCurrency(spender.totalAmount, currency)}</p>
               </div>
             </div>
           ))}
