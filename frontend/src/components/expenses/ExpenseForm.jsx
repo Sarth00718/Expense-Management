@@ -11,6 +11,8 @@ const CATEGORIES = [
   { value: 'travel', label: 'Travel', icon: '✈️' },
   { value: 'food', label: 'Food & Dining', icon: '🍽️' },
   { value: 'office_supplies', label: 'Office Supplies', icon: '📎' },
+  { value: 'entertainment', label: 'Entertainment', icon: '🎉' },
+  { value: 'utilities', label: 'Utilities', icon: '💡' },
   { value: 'other', label: 'Other', icon: '📋' }
 ];
 
@@ -278,20 +280,20 @@ const ExpenseForm = ({ expense = null, onSuccess, onCancel }) => {
         <label htmlFor="category" className="block text-text-secondary text-sm font-medium mb-2">
           Category <span className="text-error">*</span>
         </label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
           {CATEGORIES.map(cat => (
             <button
               key={cat.value}
               type="button"
               onClick={() => handleChange({ target: { name: 'category', value: cat.value } })}
-              className={`p-4 rounded-lg border-2 transition-all duration-300 text-center
+              className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-300 text-center
                 ${formData.category === cat.value
                   ? 'border-accent bg-accent/10 text-accent'
                   : 'border-secondary text-text-secondary hover:border-accent/50'
                 }`}
             >
-              <div className="text-3xl mb-2">{cat.icon}</div>
-              <div className="text-sm font-medium">{cat.label}</div>
+              <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{cat.icon}</div>
+              <div className="text-xs sm:text-sm font-medium truncate">{cat.label}</div>
             </button>
           ))}
         </div>
@@ -350,26 +352,28 @@ const ExpenseForm = ({ expense = null, onSuccess, onCancel }) => {
       )}
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Button
-          type="button"
-          onClick={handleSaveDraft}
-          variant="secondary"
-          disabled={loading || converting}
-          fullWidth
-        >
-          {loading ? 'Saving...' : 'Save as Draft'}
-        </Button>
-        
-        <Button
-          type="button"
-          onClick={handleSubmitForApproval}
-          variant="primary"
-          disabled={loading || converting}
-          fullWidth
-        >
-          {loading ? 'Submitting...' : 'Submit for Approval'}
-        </Button>
+      <div className="flex flex-col gap-2 sm:gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Button
+            type="button"
+            onClick={handleSaveDraft}
+            variant="secondary"
+            disabled={loading || converting}
+            fullWidth
+          >
+            {loading ? 'Saving...' : 'Save as Draft'}
+          </Button>
+          
+          <Button
+            type="button"
+            onClick={handleSubmitForApproval}
+            variant="primary"
+            disabled={loading || converting}
+            fullWidth
+          >
+            {loading ? 'Submitting...' : 'Submit for Approval'}
+          </Button>
+        </div>
 
         {onCancel && (
           <Button
@@ -377,6 +381,7 @@ const ExpenseForm = ({ expense = null, onSuccess, onCancel }) => {
             onClick={onCancel}
             variant="secondary"
             disabled={loading}
+            fullWidth
           >
             Cancel
           </Button>

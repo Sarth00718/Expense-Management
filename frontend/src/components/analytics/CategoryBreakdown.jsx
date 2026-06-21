@@ -65,7 +65,7 @@ const CategoryBreakdown = ({ data }) => {
             const value = context.parsed || 0;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+            return `${label}: ₹${value.toLocaleString('en-IN')} (${percentage}%)`;
           }
         }
       }
@@ -74,8 +74,8 @@ const CategoryBreakdown = ({ data }) => {
 
   return (
     <div className="h-full">
-      <h3 className="text-lg font-semibold text-white mb-4">Expenses by Category</h3>
-      <div className="h-[calc(100%-2rem)] flex items-center justify-center">
+      <h3 className="text-lg font-semibold text-white mb-3 sm:mb-4">Expenses by Category</h3>
+      <div className="h-[calc(100%-2.5rem)] flex items-center justify-center">
         {data.length > 0 ? (
           <Doughnut data={chartData} options={options} />
         ) : (

@@ -12,7 +12,13 @@ const httpServer = createServer(app);
 // Initialize Socket.io
 const io = new Server(httpServer, {
   cors: {
-    origin: config.clientUrl,
+    origin: (origin, callback) => {
+      if (!origin || config.clientUrls.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST']
   }
 });
@@ -22,7 +28,13 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: config.clientUrl,
+  origin: (origin, callback) => {
+    if (!origin || config.clientUrls.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());

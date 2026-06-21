@@ -55,7 +55,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         `}
       >
         {/* Logo and close button */}
-        <div className="flex items-center justify-between p-6 border-b border-accent/20">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-primary to-secondary h-[64px] sm:h-auto border-b border-accent/20">
           <h1 className="text-2xl font-bold text-accent">
             Exe<span className="text-accent-secondary">$</span>Man
           </h1>

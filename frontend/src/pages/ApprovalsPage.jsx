@@ -13,21 +13,21 @@ const ApprovalsPage = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-text-primary mb-2">
+        <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-2">
           ✅ Approvals
         </h1>
-        <p className="text-text-secondary">
+        <p className="text-text-secondary text-sm">
           Review and approve pending expense requests
         </p>
       </div>
 
       {/* Tabs */}
       {showRulesTab && (
-        <div className="mb-6 border-b-2 border-secondary">
-          <div className="flex gap-4">
+        <div className="mb-6 border-b-2 border-secondary overflow-x-auto">
+          <div className="flex gap-2 sm:gap-4 min-w-max">
             <button
               onClick={() => setActiveTab('queue')}
-              className={`px-6 py-3 font-semibold transition-all duration-300 border-b-2 ${
+              className={`px-4 sm:px-6 py-3 font-semibold transition-all duration-300 border-b-2 whitespace-nowrap ${
                 activeTab === 'queue'
                   ? 'border-accent text-accent'
                   : 'border-transparent text-text-secondary hover:text-text-primary'
@@ -37,7 +37,7 @@ const ApprovalsPage = () => {
             </button>
             <button
               onClick={() => setActiveTab('rules')}
-              className={`px-6 py-3 font-semibold transition-all duration-300 border-b-2 ${
+              className={`px-4 sm:px-6 py-3 font-semibold transition-all duration-300 border-b-2 whitespace-nowrap ${
                 activeTab === 'rules'
                   ? 'border-accent text-accent'
                   : 'border-transparent text-text-secondary hover:text-text-primary'

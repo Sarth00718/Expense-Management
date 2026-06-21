@@ -68,7 +68,7 @@ const ExpenseChart = ({ data, title = 'Monthly Expenses' }) => {
         displayColors: false,
         callbacks: {
           label: function(context) {
-            return `$${context.parsed.y.toFixed(2)}`;
+            return `₹${context.parsed.y.toLocaleString('en-IN')}`;
           }
         }
       }
@@ -86,7 +86,7 @@ const ExpenseChart = ({ data, title = 'Monthly Expenses' }) => {
             size: window.innerWidth < 768 ? 10 : 12
           },
           callback: function(value) {
-            return '$' + value.toLocaleString();
+            return '₹' + value.toLocaleString('en-IN');
           }
         }
       },
@@ -108,8 +108,8 @@ const ExpenseChart = ({ data, title = 'Monthly Expenses' }) => {
 
   return (
     <div className="h-full">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
-      <div className="h-[calc(100%-2rem)]">
+      <h3 className="text-lg font-semibold text-white mb-3 sm:mb-4">{title}</h3>
+      <div className="h-[calc(100%-2.5rem)]">
         {data.length > 0 ? (
           <Line data={chartData} options={options} />
         ) : (

@@ -6,7 +6,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import NotificationToast from './components/common/NotificationToast';
-import LoadingSpinner from './components/common/LoadingSpinner';
+import Loader from './components/common/Loader';
 
 // Lazy load pages for code splitting
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -25,7 +25,7 @@ function App() {
         <AuthProvider>
           <NotificationProvider>
             <NotificationToast />
-            <Suspense fallback={<LoadingSpinner fullScreen message="Loading..." />}>
+            <Suspense fallback={<Loader fullScreen message="Loading..." />}>
               <Routes>
                 {/* Public routes */}
                 <Route path="/login" element={<LoginPage />} />

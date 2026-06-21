@@ -94,67 +94,64 @@ export const createExpense = asyncHandler(async (req, res) => {
 });
 
 // Get expenses with role-based filtering
-export const getExpenses = async (req, res, next) => {
-  try {
-    const { status, category, startDate, endDate, sortBy = 'date', order = 'desc' } = req.query;
+export const getExpenses = asyncHandler(async (req, res) => {
+  const { status, category, startDate, endDate, sortBy = 'date', order = 'desc' } = req.query;
 
-    let query = { companyId: req.user.companyId };
+  let query = { companyId: req.user.companyId };
 
-    // Role-based filtering
-    if (req.user.role === 'employee') {
-      // Employees see only their own expenses
-      query.employeeId = req.user._id;
-    } else if (req.user.role === 'manager') {
-      // Managers see their team's expenses and their own
-      const teamMembers = await User.find({
-        managerId: req.user._id,
-        companyId: req.user.companyId,
-        isActive: true
-      }).select('_id');
+  // Role-based filtering
+  if (req.user.role === 'employee') {
+    // Employees see only their own expenses
+    query.employeeId = req.user._id;
+  } else if (req.user.role === 'manager') {
+    // Managers see their team's expenses and their own
+    const teamMembers = await User.find({
+      managerId: req.user._id,
+      companyId: req.user.companyId,
+      isActive: true
+    }).select('_id');
 
-      const teamMemberIds = teamMembers.map(member => member._id);
-      query.employeeId = { $in: [...teamMemberIds, req.user._id] };
-    }
-    // Admins see all expenses (no additional filter needed)
-
-    // Apply filters
-    if (status) {
-      query.status = status;
-    }
-
-    if (category) {
-      query.category = category;
-    }
-
-    if (startDate || endDate) {
-      query.date = {};
-      if (startDate) {
-        query.date.$gte = new Date(startDate);
-      }
-      if (endDate) {
-        query.date.$lte = new Date(endDate);
-      }
-    }
-
-    // Build sort object
-    const sortOrder = order === 'asc' ? 1 : -1;
-    const sortOptions = {};
-    sortOptions[sortBy] = sortOrder;
-
-    const expenses = await Expense.find(query)
-      .populate('employeeId', 'firstName lastName email')
-      .populate('currentApproverId', 'firstName lastName email')
-      .sort(sortOptions);
-
-    res.json({
-      success: true,
-      data: expenses,
-      count: expenses.length
-    });
-  } catch (error) {
-    next(error);
+    const teamMemberIds = teamMembers.map(member => member._id);
+    query.employeeId = { $in: [...teamMemberIds, req.user._id] };
   }
-};
+  // Admins see all expenses (no additional filter needed)
+
+  // Apply filters
+  if (status) {
+    query.status = status;
+  }
+
+  if (category) {
+    query.category = category;
+  }
+
+  if (startDate || endDate) {
+    query.date = {};
+    if (startDate) {
+      query.date.$gte = new Date(startDate);
+    }
+    if (endDate) {
+      query.date.$lte = new Date(endDate);
+    }
+  }
+
+  // Build sort object
+  const sortOrder = order === 'asc' ? 1 : -1;
+  const sortOptions = {};
+  sortOptions[sortBy] = sortOrder;
+
+  const expenses = await Expense.find(query)
+    .populate('employeeId', 'firstName lastName email')
+    .populate('currentApproverId', 'firstName lastName email')
+    .populate('companyId', 'name baseCurrency')
+    .sort(sortOptions);
+
+  res.json({
+    success: true,
+    data: expenses,
+    count: expenses.length
+  });
+});
 
 // Get single expense by ID
 export const getExpenseById = async (req, res, next) => {
@@ -164,7 +161,8 @@ export const getExpenseById = async (req, res, next) => {
     const expense = await Expense.findById(id)
       .populate('employeeId', 'firstName lastName email')
       .populate('currentApproverId', 'firstName lastName email')
-      .populate('approvalHistory.approverId', 'firstName lastName email');
+      .populate('approvalHistory.approverId', 'firstName lastName email')
+      .populate('companyId', 'name baseCurrency');
 
     if (!expense) {
       return res.status(404).json({
@@ -492,6 +490,7 @@ export const getExpenseHistory = async (req, res, next) => {
         .populate('employeeId', 'firstName lastName email')
         .populate('currentApproverId', 'firstName lastName email')
         .populate('approvalHistory.approverId', 'firstName lastName email')
+        .populate('companyId', 'name baseCurrency')
         .sort(sortOptions)
         .skip(skip)
         .limit(parseInt(limit)),

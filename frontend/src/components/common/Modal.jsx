@@ -30,7 +30,7 @@ const Modal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-fade-in">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
@@ -40,18 +40,18 @@ const Modal = ({
       {/* Modal Content */}
       <div className={`relative bg-gradient-to-br from-secondary to-secondary/80 border-2 border-accent/30 rounded-xl shadow-2xl ${sizes[size]} w-full max-h-[90vh] overflow-y-auto custom-scrollbar animate-scale-in`}>
         {/* Header */}
-        <div className="sticky top-0 bg-secondary/95 backdrop-blur-sm border-b border-accent/20 px-6 py-4 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-text-primary">{title}</h2>
+        <div className="sticky top-0 bg-secondary/95 backdrop-blur-sm border-b border-accent/20 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between z-10 gap-3">
+          <h2 className="text-lg sm:text-2xl font-bold text-text-primary truncate">{title}</h2>
           <button
             onClick={onClose}
-            className="text-text-secondary hover:text-accent hover:rotate-90 transition-all duration-300"
+            className="text-text-secondary hover:text-accent hover:rotate-90 transition-all duration-300 p-1 flex-shrink-0"
           >
-            <X size={24} />
+            <X size={20} sm={24} />
           </button>
         </div>
         
         {/* Body */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {children}
         </div>
       </div>

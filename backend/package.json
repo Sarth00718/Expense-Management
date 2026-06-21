@@ -7,6 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
+    "seed": "node seed.js",
+    "clear-db": "node clear-db.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --runInBand"
   },

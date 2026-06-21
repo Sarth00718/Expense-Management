@@ -148,15 +148,15 @@ const ApprovalRulesManager = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-3xl font-bold text-text-primary mb-2">Approval Rules</h2>
-          <p className="text-text-secondary">
+          <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-2">Approval Rules</h2>
+          <p className="text-text-secondary text-sm">
             Configure automated approval workflows for expense management
           </p>
         </div>
         
-        <Button onClick={handleCreateNew} variant="primary">
+        <Button onClick={handleCreateNew} variant="primary" className="w-full sm:w-auto">
           + Create New Rule
         </Button>
       </div>

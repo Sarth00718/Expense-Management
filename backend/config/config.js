@@ -8,7 +8,7 @@ export const config = {
   mongodbUri: process.env.MONGODB_URI,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h',
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:3000',
+  clientUrls: (process.env.CLIENT_URL || 'http://localhost:3000').split(',').map(url => url.trim()),
   uploadDir: process.env.UPLOAD_DIR || 'uploads/receipts',
   maxFileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880, // 5MB
   exchangeRateApiUrl: process.env.EXCHANGE_RATE_API_URL,

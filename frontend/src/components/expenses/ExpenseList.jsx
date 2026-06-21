@@ -133,7 +133,7 @@ const ExpenseList = ({ onEdit, onView, refreshTrigger = 0 }) => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
           {expenses.map(expense => (
             <ExpenseCard
               key={expense._id}

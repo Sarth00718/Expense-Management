@@ -176,7 +176,7 @@ const ApprovalQueue = () => {
 
       {/* Approval Cards Grid */}
       {approvals.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {approvals.map((expense) => (
             <ApprovalCard
               key={expense._id}

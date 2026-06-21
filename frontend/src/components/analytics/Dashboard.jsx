@@ -118,7 +118,7 @@ const Dashboard = () => {
         />
         <TrendWidget
           title="Total Amount"
-          value={`$${(summary.totalAmount || 0).toFixed(2)}`}
+          value={`₹${(summary.totalAmount || 0).toLocaleString('en-IN')}`}
           icon="💰"
         />
         <TrendWidget

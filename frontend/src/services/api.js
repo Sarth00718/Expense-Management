@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json'
   },
@@ -51,13 +51,15 @@ api.interceptors.response.use(
   async (error) => {
     const config = error.config;
 
-    // Handle 401 Unauthorized - redirect to login
+    // Handle 401 Unauthorized - redirect to login (but not if already on auth pages)
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      const isAuthPage = window.location.pathname.includes('/login') || 
+                         window.location.pathname.includes('/signup');
       
-      // Only redirect if not already on login page
-      if (!window.location.pathname.includes('/login')) {
+      if (!isAuthPage) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('company');
         window.location.href = '/login';
       }
       return Promise.reject(error);

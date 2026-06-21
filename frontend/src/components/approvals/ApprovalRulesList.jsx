@@ -53,31 +53,31 @@ const ApprovalRulesList = ({ rules, onEdit, onDelete, onToggleActive }) => {
       {rules.map((rule) => (
         <div
           key={rule._id}
-          className={`bg-secondary border-2 rounded-lg p-5 transition-all duration-300
+          className={`bg-secondary border-2 rounded-lg p-4 sm:p-5 transition-all duration-300
             ${rule.isActive ? 'border-accent/30 hover:border-accent' : 'border-text-secondary/30 opacity-60'}`}
         >
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3">
             {/* Rule Info */}
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-text-primary font-semibold text-lg">
+            <div className="flex-1 w-full">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <h3 className="text-text-primary font-semibold text-base sm:text-lg truncate max-w-[200px] sm:max-w-none">
                   {rule.name}
                 </h3>
                 
                 {/* Active Badge */}
                 {rule.isActive ? (
-                  <span className="px-2 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success">
+                  <span className="px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-success/10 text-success border border-success flex-shrink-0">
                     ACTIVE
                   </span>
                 ) : (
-                  <span className="px-2 py-1 rounded-full text-xs font-semibold bg-text-secondary/10 text-text-secondary border border-text-secondary">
+                  <span className="px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-text-secondary/10 text-text-secondary border border-text-secondary flex-shrink-0">
                     INACTIVE
                   </span>
                 )}
                 
                 {/* Priority Badge */}
                 {rule.priority > 0 && (
-                  <span className="px-2 py-1 rounded-full text-xs font-semibold bg-accent/10 text-accent border border-accent">
+                  <span className="px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-accent/10 text-accent border border-accent flex-shrink-0">
                     Priority: {rule.priority}
                   </span>
                 )}
@@ -89,16 +89,16 @@ const ApprovalRulesList = ({ rules, onEdit, onDelete, onToggleActive }) => {
               </p>
 
               {/* Rule Description */}
-              <p className="text-text-secondary text-sm">
+              <p className="text-text-secondary text-sm truncate sm:whitespace-normal">
                 {getRuleDescription(rule)}
               </p>
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2 ml-4">
+            <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-4">
               <button
                 onClick={() => onToggleActive(rule)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                className={`px-2 py-2 sm:px-3 rounded-lg text-sm font-medium transition-all duration-300 flex-shrink-0
                   ${rule.isActive 
                     ? 'bg-warning/10 border-2 border-warning text-warning hover:bg-warning hover:text-white' 
                     : 'bg-success/10 border-2 border-success text-success hover:bg-success hover:text-white'
@@ -110,16 +110,16 @@ const ApprovalRulesList = ({ rules, onEdit, onDelete, onToggleActive }) => {
 
               <button
                 onClick={() => onEdit(rule)}
-                className="px-3 py-2 bg-secondary border-2 border-accent text-accent rounded-lg
-                  hover:bg-accent hover:text-primary transition-all duration-300 text-sm font-medium"
+                className="px-2 py-2 sm:px-3 bg-secondary border-2 border-accent text-accent rounded-lg
+                  hover:bg-accent hover:text-primary transition-all duration-300 text-sm font-medium flex-shrink-0"
               >
                 ✏️ Edit
               </button>
 
               <button
                 onClick={() => onDelete(rule)}
-                className="px-3 py-2 bg-error/10 border-2 border-error text-error rounded-lg
-                  hover:bg-error hover:text-white transition-all duration-300 text-sm font-medium"
+                className="px-2 py-2 sm:px-3 bg-error/10 border-2 border-error text-error rounded-lg
+                  hover:bg-error hover:text-white transition-all duration-300 text-sm font-medium flex-shrink-0"
               >
                 🗑️ Delete
               </button>

@@ -280,12 +280,12 @@ const ApprovalRulesForm = ({ rule, users, onSubmit, onCancel, isLoading }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 pt-4">
+      <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <button
           type="button"
           onClick={onCancel}
           disabled={isLoading}
-          className="flex-1 px-6 py-3 bg-secondary border-2 border-text-secondary text-text-secondary rounded-lg
+          className="flex-1 px-4 sm:px-6 py-3 bg-secondary border-2 border-text-secondary text-text-secondary rounded-lg
             hover:bg-text-secondary hover:text-primary transition-all duration-300 font-semibold
             disabled:opacity-50 disabled:cursor-not-allowed"
         >
