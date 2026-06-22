@@ -346,10 +346,12 @@ export const getApprovalStats = async (req, res, next) => {
       {
         $project: {
           approvalTime: {
-            $subtract: [
-              { $arrayElemAt: ['$approvalHistory.timestamp', 0] },
-              '$createdAt'
-            ]
+            $abs: {
+              $subtract: [
+                { $arrayElemAt: ['$approvalHistory.timestamp', -1] }, // Get last approval history entry
+                '$createdAt'
+              ]
+            }
           }
         }
       },

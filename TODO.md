@@ -1,0 +1,3 @@
+- [x] Update frontend/src/components/expenses/ReceiptUpload.jsx preview image wrapper: add overflow-hidden, unify rounding, remove img rounded.
+- [x] Update frontend/src/pages/ExpensesPage.jsx receipt preview: wrap img in overflow-hidden rounded container and remove img rounded.
+- [ ] (After edits) run frontend lint/build or at least `npm test`/`npm run build` if available.

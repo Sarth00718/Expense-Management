@@ -126,7 +126,7 @@ const seedData = async () => {
       const date = new Date();
       date.setMonth(date.getMonth() - monthsAgo);
       date.setDate(date.getDate() - daysAgo);
-      return date.toISOString().split('T')[0];
+      return date;
     };
 
     // Create realistic expenses across 3 months
@@ -141,6 +141,7 @@ const seedData = async () => {
         category: 'travel',
         description: 'Cab from home to office (OLA)',
         date: getDate(5, 1),
+        createdAt: getDate(5, 1),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -161,6 +162,7 @@ const seedData = async () => {
         category: 'food',
         description: 'Team lunch at Cafe Coffee Day',
         date: getDate(10, 1),
+        createdAt: getDate(10, 1),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -182,6 +184,7 @@ const seedData = async () => {
         category: 'travel',
         description: 'Flight to Mumbai',
         date: getDate(15, 2),
+        createdAt: getDate(15, 2),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -203,6 +206,7 @@ const seedData = async () => {
         category: 'travel',
         description: 'Cab from home to office (OLA)',
         date: getDate(1),
+        createdAt: getDate(1),
         status: 'pending',
         currentApproverId: savedManager._id,
       },
@@ -215,6 +219,7 @@ const seedData = async () => {
         category: 'food',
         description: 'Team lunch at Cafe Coffee Day',
         date: getDate(2),
+        createdAt: getDate(2),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -222,7 +227,7 @@ const seedData = async () => {
             approverId: savedManager._id,
             action: 'approved',
             comment: 'Looks good!',
-            timestamp: new Date(),
+            timestamp: getDate(1),
           },
         ],
       },
@@ -235,6 +240,7 @@ const seedData = async () => {
         category: 'travel',
         description: 'Flight ticket to Delhi for client meeting',
         date: getDate(5),
+        createdAt: getDate(5),
         status: 'pending',
         currentApproverId: savedAdmin._id,
       },
@@ -247,6 +253,7 @@ const seedData = async () => {
         category: 'office_supplies',
         description: 'New wireless mouse and keyboard',
         date: getDate(7),
+        createdAt: getDate(7),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -254,7 +261,7 @@ const seedData = async () => {
             approverId: savedManager._id,
             action: 'approved',
             comment: 'Approved',
-            timestamp: new Date(),
+            timestamp: getDate(6),
           },
         ],
       },
@@ -269,6 +276,7 @@ const seedData = async () => {
         category: 'food',
         description: 'Breakfast at office canteen',
         date: getDate(0),
+        createdAt: getDate(0),
         status: 'draft',
         currentApproverId: null,
       },
@@ -281,6 +289,7 @@ const seedData = async () => {
         category: 'utilities',
         description: 'Internet bill for work-from-home',
         date: getDate(10),
+        createdAt: getDate(10),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -288,7 +297,7 @@ const seedData = async () => {
             approverId: savedManager._id,
             action: 'approved',
             comment: 'Approved for WFH',
-            timestamp: new Date(),
+            timestamp: getDate(9),
           },
         ],
       },
@@ -301,6 +310,7 @@ const seedData = async () => {
         category: 'travel',
         description: 'Hotel stay during business trip to Pune',
         date: getDate(14),
+        createdAt: getDate(14),
         status: 'rejected',
         currentApproverId: null,
         approvalHistory: [
@@ -308,7 +318,7 @@ const seedData = async () => {
             approverId: savedManager._id,
             action: 'rejected',
             comment: 'Please provide hotel bill',
-            timestamp: new Date(),
+            timestamp: getDate(13),
           },
         ],
       },
@@ -322,6 +332,7 @@ const seedData = async () => {
         category: 'travel',
         description: 'Flight to Bangalore',
         date: getDate(8, 1),
+        createdAt: getDate(8, 1),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -344,6 +355,7 @@ const seedData = async () => {
         category: 'entertainment',
         description: 'Team movie outing (team building activity)',
         date: getDate(3),
+        createdAt: getDate(3),
         status: 'pending',
         currentApproverId: savedManager._id,
       },
@@ -356,6 +368,7 @@ const seedData = async () => {
         category: 'food',
         description: 'Dinner with client',
         date: getDate(8),
+        createdAt: getDate(8),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [
@@ -363,7 +376,7 @@ const seedData = async () => {
             approverId: savedManager._id,
             action: 'approved',
             comment: 'Client entertainment approved',
-            timestamp: new Date(),
+            timestamp: getDate(7),
           },
         ],
       },
@@ -376,6 +389,7 @@ const seedData = async () => {
         category: 'office_supplies',
         description: 'Stationery items for team',
         date: getDate(12),
+        createdAt: getDate(12),
         status: 'pending',
         currentApproverId: savedManager._id,
       },
@@ -389,6 +403,7 @@ const seedData = async () => {
         category: 'food',
         description: 'Team dinner',
         date: getDate(12, 1),
+        createdAt: getDate(12, 1),
         status: 'approved',
         currentApproverId: null,
         approvalHistory: [

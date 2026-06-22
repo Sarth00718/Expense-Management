@@ -240,11 +240,11 @@ const ReceiptUpload = ({ onDataExtracted, onImageSelected, onUploadComplete }) =
       {/* Image Preview */}
       {imagePreview && (
         <div className="space-y-4">
-          <div className="relative bg-secondary rounded-lg p-4 border-2 border-secondary">
+          <div className="relative bg-secondary rounded-lg overflow-hidden p-4">
             <img
               src={imagePreview}
               alt="Receipt preview"
-              className="max-h-64 mx-auto rounded-lg"
+              className="block w-full max-h-64 object-contain mx-auto"
             />
             
             <button

@@ -1,17 +1,71 @@
 import Tesseract from 'tesseract.js';
 
 /**
+ * Preprocess image for better OCR results
+ * @param {File|string} image - Image file or URL
+ * @returns {Promise<string>} Processed image as data URL
+ */
+const preprocessImage = async (image) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    img.onload = () => {
+      // Resize image to optimal size for OCR (2000px max width, maintain aspect ratio)
+      const maxWidth = 2000;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth) {
+        const ratio = maxWidth / width;
+        width = maxWidth;
+        height = height * ratio;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw and convert to grayscale
+      ctx.drawImage(img, 0, 0, width, height);
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
+
+      // Convert to grayscale and increase contrast
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+        // Increase contrast
+        const contrast = 1.3; // Contrast factor
+        const contrasted = Math.min(255, Math.max(0, Math.round((gray - 128) * contrast + 128)));
+        data[i] = contrasted;
+        data[i + 1] = contrasted;
+        data[i + 2] = contrasted;
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      resolve(canvas.toDataURL('image/jpeg', 0.95));
+    };
+
+    if (image instanceof File) {
+      img.src = URL.createObjectURL(image);
+    } else {
+      img.src = image;
+    }
+  });
+};
+
+/**
  * OCR Service for processing receipt images and extracting expense data
  * Uses Tesseract.js for client-side OCR processing
  */
 
 // Category keywords mapping for smart suggestions
 const CATEGORY_KEYWORDS = {
-  travel: ['uber', 'lyft', 'taxi', 'flight', 'airline', 'hotel', 'airbnb', 'rental', 'gas', 'fuel', 'parking', 'toll'],
-  food: ['restaurant', 'cafe', 'coffee', 'starbucks', 'mcdonald', 'pizza', 'burger', 'food', 'dining', 'lunch', 'dinner', 'breakfast'],
-  office_supplies: ['staples', 'office', 'depot', 'paper', 'pen', 'printer', 'ink', 'supplies', 'amazon'],
-  entertainment: ['movie', 'cinema', 'theater', 'theatre', 'concert', 'show', 'ticket', 'netflix', 'spotify', 'entertainment', 'game', 'amusement'],
-  utilities: ['electric', 'electricity', 'water', 'gas', 'internet', 'phone', 'utility', 'utilities', 'bill', 'telecom'],
+  travel: ['uber', 'lyft', 'taxi', 'flight', 'airline', 'hotel', 'airbnb', 'rental', 'gas', 'fuel', 'parking', 'toll', 'walmart', 'target', 'costco'],
+  food: ['restaurant', 'cafe', 'coffee', 'starbucks', 'mcdonald', 'pizza', 'burger', 'food', 'dining', 'lunch', 'dinner', 'breakfast', 'grocery', 'supermarket', 'kroger', 'safeway', 'walgreens', 'cvs', 'doordash', 'ubereats', 'grubhub', 'instacart'],
+  office_supplies: ['staples', 'office', 'depot', 'paper', 'pen', 'printer', 'ink', 'supplies', 'amazon', 'best buy', 'home depot', 'lowes', 'ikea'],
+  entertainment: ['movie', 'cinema', 'theater', 'theatre', 'concert', 'show', 'ticket', 'netflix', 'spotify', 'entertainment', 'game', 'amusement', 'apple', 'google', 'microsoft'],
+  utilities: ['electric', 'electricity', 'water', 'gas', 'internet', 'phone', 'utility', 'utilities', 'bill', 'telecom', 'paypal', 'invoice', 'receipt'],
   other: []
 };
 
@@ -23,20 +77,56 @@ const CATEGORY_KEYWORDS = {
  */
 export const processReceipt = async (image, onProgress = null) => {
   try {
-    const result = await Tesseract.recognize(
-      image,
-      'eng',
-      {
-        logger: (m) => {
-          if (onProgress && m.status === 'recognizing text') {
-            onProgress(Math.round(m.progress * 100));
-          }
-        }
-      }
-    );
+    // Preprocess the image first
+    const preprocessedImage = await preprocessImage(image);
 
-    const text = result.data.text;
-    const confidence = result.data.confidence;
+    // Try different page segmentation modes
+    const pageSegModes = ['6', '3', '1']; // 6: Uniform block, 3: Auto, 1: Single column
+    let bestResult = null;
+    let bestConfidence = 0;
+
+    for (const mode of pageSegModes) {
+      const result = await Tesseract.recognize(
+        preprocessedImage,
+        'eng',
+        {
+          logger: (m) => {
+            if (onProgress && m.status === 'recognizing text') {
+              // Adjust progress for multiple tries
+              const progressPerTry = 100 / pageSegModes.length;
+              const currentTry = pageSegModes.indexOf(mode);
+              onProgress(Math.round(currentTry * progressPerTry + (m.progress * progressPerTry)));
+            }
+          },
+          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,$-/: ',
+          preserve_interword_spaces: '1',
+          tessedit_pageseg_mode: mode
+        }
+      );
+
+      // Evaluate which result is better
+      const vendor = extractVendor(result.data.text);
+      const amount = extractAmount(result.data.text);
+      const date = extractDate(result.data.text);
+      
+      // Calculate a score based on extracted fields
+      let score = result.data.confidence;
+      if (vendor) score += 10;
+      if (amount) score += 20;
+      if (date) score += 15;
+
+      if (score > bestConfidence) {
+        bestConfidence = score;
+        bestResult = result;
+      }
+    }
+
+    if (!bestResult) {
+      throw new Error('Failed to process receipt');
+    }
+
+    const text = bestResult.data.text;
+    const confidence = bestResult.data.confidence;
 
     // Extract data from OCR text
     const extractedData = {
@@ -73,14 +163,33 @@ export const processReceipt = async (image, onProgress = null) => {
 const extractVendor = (text) => {
   const lines = text.split('\n').filter(line => line.trim().length > 0);
   
+  // List of known vendors to prioritize
+  const knownVendors = [
+    'Walmart', 'Target', 'Amazon', 'Starbucks', 'McDonald', 'Kroger',
+    'Safeway', 'Walgreens', 'CVS', 'Costco', 'Sam\'s Club', '7-Eleven',
+    'Shell', 'Exxon', 'Chevron', 'BP', 'Uber', 'Lyft', 'DoorDash',
+    'Uber Eats', 'Grubhub', 'Instacart', 'Best Buy', 'Home Depot',
+    'Lowe\'s', 'IKEA', 'Apple', 'Google', 'Microsoft', 'PayPal',
+    'INV24', 'Invoice', 'Receipt'
+  ];
+  
+  // Check for known vendors first
+  const lowerText = text.toLowerCase();
+  for (const vendor of knownVendors) {
+    if (lowerText.includes(vendor.toLowerCase())) {
+      return vendor;
+    }
+  }
+  
   // Usually vendor name is in the first few lines
-  for (let i = 0; i < Math.min(5, lines.length); i++) {
+  for (let i = 0; i < Math.min(10, lines.length); i++) {
     const line = lines[i].trim();
     // Look for lines with capital letters and reasonable length
-    if (line.length > 3 && line.length < 50 && /[A-Z]/.test(line)) {
+    if (line.length > 2 && line.length < 80 && /[A-Z]/.test(line)) {
       // Skip lines that look like addresses or phone numbers
-      if (!/\d{3,}/.test(line) && !/street|st\.|ave|road|rd\.|blvd/i.test(line)) {
-        return line;
+      if (!/\d{5,}/.test(line) && !/street|st\.|ave|avenue|road|rd\.|blvd|boulevard|lane|ln\.|drive|dr\.|circle|cir\.|court|ct\./i.test(line)) {
+        // Clean up the line
+        return line.replace(/[^\w\s&'-]/g, '').trim();
       }
     }
   }
@@ -94,22 +203,33 @@ const extractVendor = (text) => {
  */
 const extractAmount = (text) => {
   const patterns = [
-    /total[:\s]*\$?\s*(\d+[.,]\d{2})/i,
-    /amount[:\s]*\$?\s*(\d+[.,]\d{2})/i,
-    /balance[:\s]*\$?\s*(\d+[.,]\d{2})/i,
-    /\$\s*(\d+[.,]\d{2})/g
+    /total[:\s]*\$?\s*([\d.,]+)/gi,
+    /amount[:\s]*\$?\s*([\d.,]+)/gi,
+    /balance[:\s]*\$?\s*([\d.,]+)/gi,
+    /subtotal[:\s]*\$?\s*([\d.,]+)/gi,
+    /due[:\s]*\$?\s*([\d.,]+)/gi,
+    /paid[:\s]*\$?\s*([\d.,]+)/gi,
+    /\$\s*([\d.,]+)/g,
+    /(\d+[.,]\d{2})/g
   ];
 
+  let amounts = [];
   for (const pattern of patterns) {
-    const matches = text.match(pattern);
-    if (matches) {
-      // Extract the numeric value
-      const amountStr = matches[1] || matches[0];
-      const amount = parseFloat(amountStr.replace(/[,$]/g, '').replace(',', '.'));
-      if (!isNaN(amount) && amount > 0 && amount < 1000000) {
-        return amount;
+    const matches = [...text.matchAll(pattern)];
+    for (const match of matches) {
+      if (match && (match[1] || match[0])) {
+        const amountStr = match[1] || match[0].replace(/\$/, '');
+        const amount = parseFloat(amountStr.replace(/,/g, ''));
+        if (!isNaN(amount) && amount > 0 && amount < 1000000) {
+          amounts.push(amount);
+        }
       }
     }
+  }
+  
+  // Return the largest amount (likely the total)
+  if (amounts.length > 0) {
+    return Math.max(...amounts);
   }
 
   return null;
@@ -128,7 +248,9 @@ const extractDate = (text) => {
     // Month DD, YYYY
     /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+(\d{1,2}),?\s+(\d{4})/i,
     // YYYY-MM-DD
-    /(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
+    /(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/,
+    // DD Month YYYY
+    /(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+(\d{4})/i
   ];
 
   for (const pattern of patterns) {
@@ -136,15 +258,52 @@ const extractDate = (text) => {
     if (match) {
       try {
         // Try to parse the date
-        const dateStr = match[0];
-        const date = new Date(dateStr);
+        let date;
+        if (match[0].includes('/') || match[0].includes('-')) {
+          const parts = match[0].split(/[\/\-]/);
+          if (parts.length === 3) {
+            let year, month, day;
+            if (parts[0].length === 4) {
+              // YYYY-MM-DD
+              year = parseInt(parts[0]);
+              month = parseInt(parts[1]);
+              day = parseInt(parts[2]);
+            } else if (parts[2].length === 4) {
+              // MM/DD/YYYY or DD/MM/YYYY
+              year = parseInt(parts[2]);
+              if (parseInt(parts[0]) > 12) {
+                // DD/MM/YYYY
+                month = parseInt(parts[1]);
+                day = parseInt(parts[0]);
+              } else {
+                // MM/DD/YYYY
+                month = parseInt(parts[0]);
+                day = parseInt(parts[1]);
+              }
+            } else {
+              // Two-digit year
+              year = parseInt('20' + parts[2]);
+              if (parseInt(parts[0]) > 12) {
+                month = parseInt(parts[1]);
+                day = parseInt(parts[0]);
+              } else {
+                month = parseInt(parts[0]);
+                day = parseInt(parts[1]);
+              }
+            }
+            date = new Date(year, month - 1, day);
+          }
+        } else {
+          // Month name format
+          date = new Date(match[0]);
+        }
         
         // Validate the date is reasonable (not in future, not too old)
         const now = new Date();
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(now.getFullYear() - 1);
+        const fiveYearsAgo = new Date();
+        fiveYearsAgo.setFullYear(now.getFullYear() - 5);
         
-        if (date <= now && date >= oneYearAgo && !isNaN(date.getTime())) {
+        if (date <= now && date >= fiveYearsAgo && !isNaN(date.getTime())) {
           return date.toISOString().split('T')[0]; // Return YYYY-MM-DD format
         }
       } catch (e) {

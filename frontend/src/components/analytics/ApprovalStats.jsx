@@ -122,7 +122,7 @@ const ApprovalStats = ({ data, currency = 'INR' }) => {
       </div>
       {data.approvalTime && (
         <div className="mt-4 pt-4 border-t border-accent/20 text-sm text-text-secondary">
-          <p>Avg. Approval Time: {data.approvalTime.avgApprovalTimeHours.toFixed(1)} hours</p>
+          <p>Avg. Approval Time: {Math.abs(data.approvalTime.avgApprovalTimeHours).toFixed(1)} hours</p>
         </div>
       )}
     </div>

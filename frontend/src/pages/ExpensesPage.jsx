@@ -220,11 +220,11 @@ const ExpensesPage = () => {
               {viewingExpense.receiptUrl && (
                 <div>
                   <p className="text-text-secondary text-sm mb-2">Receipt</p>
-                  <div className="relative">
+                  <div className="relative rounded-lg overflow-hidden border-2 border-secondary">
                     <img
                       src={getReceiptUrl(viewingExpense.receiptUrl)}
                       alt="Receipt"
-                      className="max-w-md rounded-lg border-2 border-secondary cursor-pointer hover:border-accent transition-all"
+                      className="block max-w-md w-full h-auto object-contain cursor-pointer hover:border-accent transition-all"
                       onClick={() => window.open(getReceiptUrl(viewingExpense.receiptUrl), '_blank')}
                       onError={(e) => {
                         console.error('Failed to load receipt image:', viewingExpense.receiptUrl);
@@ -233,7 +233,7 @@ const ExpensesPage = () => {
                         e.target.style.cursor = 'default';
                       }}
                     />
-                    <p className="text-text-secondary text-xs mt-2">
+                    <p className="text-text-secondary text-xs mt-2 px-2 pb-2">
                       Click to view full size
                     </p>
                   </div>
